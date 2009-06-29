@@ -1,0 +1,34 @@
+---
+name: Lingua-LO-Romanize
+version: 0.09
+author:
+  - 'Joakim Lagerqvist <jokke@cpan.org>'
+abstract: Romanization of Lao language
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+build_requires:
+  Module::Build: 0
+  Moose: 0
+  Moose::Util::TypeConstraints: 0
+  MooseX::AttributeHelpers: 0
+  MooseX::Params::Validate: 0
+  Test::More: 0
+  utf8: 0
+provides:
+  Lingua::LO::Romanize:
+    file: lib/Lingua/LO/Romanize.pm
+    version: 0.09
+  Lingua::LO::Romanize::Syllable:
+    file: lib/Lingua/LO/Romanize/Syllable.pm
+    version: 0.09
+  Lingua::LO::Romanize::Types:
+    file: lib/Lingua/LO/Romanize/Types.pm
+    version: 0.09
+  Lingua::LO::Romanize::Word:
+    file: lib/Lingua/LO/Romanize/Word.pm
+    version: 0.09
+generated_by: Module::Build version 0.280801
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

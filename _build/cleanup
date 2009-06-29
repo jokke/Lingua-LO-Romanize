@@ -1,0 +1,6 @@
+do{ my $x = {
+       'Lingua-LO-Romanize-0.09' => 1,
+       'Lingua-LO-Romanize-*' => 1,
+       'blib' => 1
+     };
+$x; }

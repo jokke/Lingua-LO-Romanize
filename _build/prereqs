@@ -1,0 +1,16 @@
+do{ my $x = {
+       'build_requires' => {
+                             'Test::More' => 0,
+                             'MooseX::Types::Moose' => 0,
+                             'MooseX::AttributeHelpers' => 0,
+                             'MooseX::Types' => 0,
+                             'MooseX::Params::Validate' => 0,
+                             'Module::Build' => 0,
+                             'utf8' => 0,
+                             'Moose' => 0
+                           },
+       'conflicts' => {},
+       'requires' => {},
+       'recommends' => {}
+     };
+$x; }
