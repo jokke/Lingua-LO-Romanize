@@ -28,11 +28,22 @@ has 'text' => (
     is          => 'rw',
     isa         => 'WordArr',
     coerce      => 1,
-    required    => 1,
+    default     => '',
     provides    => {
         elements    => 'all_words',
     },
 );
+
+sub BUILDARGS {
+    my $class = shift;
+
+    if ( @_ == 1 && ! ref $_[0] ) {
+        return { text => $_[0] };
+    }
+    else {
+        return $class->SUPER::BUILDARGS(@_);
+    }
+}
 
 =head1 SYNOPSIS
 
@@ -41,7 +52,7 @@ This module romanizes Lao text using the BGN/PCGN standard from 1966 (with some 
     use utf8;
     use Lingua::LO::Romanize;
 
-    my $foo = Lingua::LO::Romanize->new(text => 'ພາສາລາວ');
+    my $foo = Lingua::LO::Romanize->new('ພາສາລາວ');
     
     my $bar = $foo->romanize;           # $bar will hold the string 'phasalao'
     $bar = $foo->romanize(hyphen => 1); # $bar will hold the string 'pha-sa-lao'
@@ -260,9 +271,9 @@ The Lao numbers ໐, ໑, ໒, ໓, ໔, ໕, ໖, ໗, ໘, and ໙ are romaniz
 
 =head2 new
 
-Creates a new object, a Lao text string is required
+Creates a new object with an optional text string.
     
-    my $foo = Lingua::LO::Romanize->new(text => 'ພາສາລາວ');
+    my $foo = Lingua::LO::Romanize->new('ພາສາລາວ');
 
 =head2 text
 
@@ -288,14 +299,23 @@ Returns the current text as a romanized string. If hyphen is true, the syllables
 
 sub romanize {
     my $self = shift;
-    my ( $hyphen ) = validated_list( \@_,
-              hyphen   => { isa => 'Bool', optional => 1 });
-    
+    my ( $hyphen, $standard ) = validated_list( \@_,
+                hyphen   => { 
+                    isa         => 'Bool', 
+                    optional    => 1,
+                },
+                standard => { 
+                    isa         => 'Standard', 
+                    optional    => 1, 
+                },
+              );
+    $standard ||= 'BGN_PCGN';
+
     my @romanized_arr;
     
     foreach my $word ($self->all_words) {
         $word->hyphen(1) if $hyphen;
-        push @romanized_arr, $word->romanize;
+        push @romanized_arr, $word->romanize(standard => uc($standard));
     }
     return join '', @romanized_arr;
 }

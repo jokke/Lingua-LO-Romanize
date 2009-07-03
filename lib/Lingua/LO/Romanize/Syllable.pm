@@ -3,114 +3,163 @@ package Lingua::LO::Romanize::Syllable;
 use utf8;
 
 use Moose;
+use MooseX::Params::Validate;
 
 use constant{
-    BGN_PCGN => {
-        #consonants
-        ກ   => 'k',
-        ຂ   => 'kh',
-        ຄ   => 'kh',
-        ງ   => 'ng',
-        ຈ   => 'ch',
-        ສ   => 's',
-        ຊ   => 'x',
-        ຕ   => 't',
-        ຖ   => 'th',
-        ທ   => 'th',
-        ນ   => 'n',
-        ໜ   => 'n',
-        ປ   => 'p',
-        ຜ   => 'ph',
-        ຝ   => 'f',
-        ພ   => 'ph',
-        ຟ   => 'f',
-        ມ   => 'm',
-        ໝ   => 'm',
-        ຢ   => 'y',
-        ຣ   => 'r',
-        ຣ໌  => 'r',
-        ລ   => 'l',
-        ຼ   => 'l',
-        ຫ   => 'h',
-        ຮ   => 'h',
-        #ຍ, ຽ, ດ, ບ, ວ, ອ special cases
-        #vowels
-        ະ       => 'a',
-        ັ       => 'a',
-        າ       => 'a',
-        ິ       => 'i',
-        ີ       => 'i',
-        ຶ       => 'u',
-        ື       => 'u',
-        ຸ       => 'ou',
-        ູ       => 'ou',
-        ເະ      => 'é',
-        ເັ      => 'é',
-        ເ       => 'é',
-        ແະ      => 'è',
-        ແັ      => 'è',
-        ແ       => 'è',
-        ໂະ      => 'ô',
-        ົ       => 'ô',
-        ໂ       => 'ô',
-        ເາະ     => 'o',
-        ັອ      => 'o',
-        ໍ       => 'o',
-        ອ       => 'o',
-        ເັຽະ    => 'ia',
-        ັຽ      => 'ia',
-        ເັຽ     => 'ia',
-        ຽ       => 'ia',
-        ເັຍະ    => 'ia', #?
-        ັຍ      => 'ia', #?
-        ເັຍ     => 'ia', #?
-        ຍ       => 'ia', #?
-        ເຍ      => 'ia',
-        ເຶອະ    => 'ua',
-        ເຶອ     => 'ua',
-        ເືອ     => 'ua',
-        ເິະ     => 'eu',
-        ເິ      => 'eu',
-        ເີ      => 'eu',
-        ເື      => 'eu',
-        ໄ       => 'ai',
-        ໃ       => 'ai',
-        ເົາ     => 'ao',
-        ຳ       => 'am', #not needed?
-        ໍາ      => 'am', #not needed?
-        ິວ      => 'iou',
-        ີວ      => 'iou',
-        # special case: ົວະ, ັວ, ົວ, ວ
+    ROMAN => {
+        BGN_PCGN => {
+            #consonants
+            ກ   => 'k',
+            ຂ   => 'kh',
+            ຄ   => 'kh',
+            ງ   => 'ng',
+            ຈ   => 'ch',
+            ສ   => 's',
+            ຊ   => 'x',
+            ຕ   => 't',
+            ຖ   => 'th',
+            ທ   => 'th',
+            ນ   => 'n',
+            ໜ   => 'n',
+            ປ   => 'p',
+            ຜ   => 'ph',
+            ຝ   => 'f',
+            ພ   => 'ph',
+            ຟ   => 'f',
+            ມ   => 'm',
+            ໝ   => 'm',
+            ຢ   => 'y',
+            ຣ   => 'r',
+            ຣ໌  => 'r',
+            ລ   => 'l',
+            ຼ   => 'l',
+            ຫ   => 'h',
+            ຮ   => 'h',
+            #ຍ, ຽ, ດ, ບ, ວ, ອ special cases
+            #vowels
+            ະ       => 'a',
+            ັ       => 'a',
+            າ       => 'a',
+            ິ       => 'i',
+            ີ       => 'i',
+            ຶ       => 'u',
+            ື       => 'u',
+            ຸ       => 'ou',
+            ູ       => 'ou',
+            ເະ      => 'é',
+            ເັ      => 'é',
+            ເ       => 'é',
+            ແະ      => 'è',
+            ແັ      => 'è',
+            ແ       => 'è',
+            ໂະ      => 'ô',
+            ົ       => 'ô',
+            ໂ       => 'ô',
+            ເາະ     => 'o',
+            ັອ      => 'o',
+            ໍ       => 'o',
+            ອ       => 'o',
+            ເັຽະ    => 'ia',
+            ັຽ      => 'ia',
+            ເັຽ     => 'ia',
+            ຽ       => 'ia',
+            ເັຍະ    => 'ia', #?
+            ັຍ      => 'ia', #?
+            ເັຍ     => 'ia', #?
+            ຍ       => 'ia', #?
+            ເຍ      => 'ia',
+            ເຶອະ    => 'ua',
+            ເຶອ     => 'ua',
+            ເືອ     => 'ua',
+            ເິະ     => 'eu',
+            ເິ      => 'eu',
+            ເີ      => 'eu',
+            ເື      => 'eu',
+            ໄ       => 'ai',
+            ໃ       => 'ai',
+            ເົາ     => 'ao',
+            ຳ       => 'am', #not needed?
+            ໍາ      => 'am', #not needed?
+            ິວ      => 'iou',
+            ີວ      => 'iou',
+            # special case: ົວະ, ັວ, ົວ, ວ
+        },
+        ALA_LC => {
+            #consonants
+            ກ   => 'k',
+            ຂ   => 'kh',
+            ຄ   => 'kh',
+            ງ   => 'ng',
+            ຈ   => 'ch',
+            ສ   => 's',
+            ຊ   => 's',
+            ຕ   => 't',
+            ຖ   => 'th',
+            ທ   => 'th',
+            ນ   => 'n',
+            ໜ   => 'n',
+            ປ   => 'p',
+            ຜ   => 'ph',
+            ຝ   => 'f',
+            ພ   => 'ph',
+            ຟ   => 'f',
+            ມ   => 'm',
+            ໝ   => 'm',
+            ຢ   => 'y',
+            ຣ   => 'r',
+            ຣ໌  => 'r',
+            ລ   => 'l',
+            ຼ   => 'l',
+            ຫ   => 'h',
+            ຮ   => 'h',
+            #vowels
+            ະ       => 'a',
+            ັ       => 'a',
+            າ       => 'ā',
+            ິ       => 'i',
+            ີ       => 'ī',
+            ຶ       => 'ư',
+            ື       => 'ư̄',
+            ຸ       => 'u',
+            ູ       => 'ū',
+            ເະ      => 'e',
+            ເັ      => 'e',
+            ເ       => 'ē',
+            ແະ      => 'æ',
+            ແັ      => 'æ',
+            ແ       => 'ǣ',
+            ໂະ      => 'o',
+            ົ       => 'o',
+            ໂ       => 'ō',
+            ເາະ     => 'ǫ',
+            ັອ      => 'ǫ',
+            ໍ       => 'ǭ',
+            ອ       => 'ǭ',
+            ເິະ     => 'œ',
+            ເິ      => 'œ',
+            ເີ      => 'œ̄',
+            ເື      => 'œ̄',
+            ເັຽະ    => 'ia',
+            ັຽ      => 'ia',
+            ເັຽ     => 'īa',
+            ຽ       => 'īa',
+            ເັຍະ    => 'ia',
+            ັຍ      => 'ia',
+            ເັຍ     => 'īa',
+            ຍ       => 'īa',
+            ເຍ      => 'īa', #no reference
+            ເຶອະ    => 'ưa',
+            ເຶອ     => 'ưa',
+            ເືອ     => 'ư̄a',
+            ໄ       => 'ai',
+            ໃ       => 'ai',
+            ເົາ     => 'ao',
+            ຳ       => 'am', #not needed?
+            ໍາ      => 'am', #not needed?
+            ິວ      => 'iu',
+            ີວ      => 'īu',
+        },
     },
-    ALA_LC => {
-        #consonants
-        ກ   => 'k',
-        ຂ   => 'kh',
-        ຄ   => 'kh',
-        ງ   => 'ng',
-        ຈ   => 'ch',
-        ສ   => 's',
-        ຊ   => 's',
-        ຕ   => 't',
-        ຖ   => 'th',
-        ທ   => 'th',
-        ນ   => 'n',
-        ໜ   => 'n',
-        ປ   => 'p',
-        ຜ   => 'ph',
-        ຝ   => 'f',
-        ພ   => 'ph',
-        ຟ   => 'f',
-        ມ   => 'm',
-        ໝ   => 'm',
-        ຢ   => 'y',
-        ຣ   => 'r',
-        ຣ໌  => 'r',
-        ລ   => 'l',
-        ຼ   => 'l',
-        ຫ   => 'h',
-        ຮ   => 'h',
-    }
 };
 
 =encoding utf-8
@@ -171,6 +220,12 @@ A constant hash reference for romanization mapping accourding to BGN/PCGN.
 
 sub romanize {
     my $self = shift;
+    my ( $standard ) = validated_list( \@_,
+                standard => { 
+                    isa         => 'Standard', 
+                },
+              );
+    
     my $syllable = $self->syllable_str;
     my $romanized_str;
     
@@ -194,7 +249,11 @@ sub romanize {
     
     #ຍ, ຽ, ດ, ບ, ວ, ອ
     if ($consonant =~ /^[ຍຽ]$/) {
-        $romanized_str = 'gn';
+        if ($standard eq 'ALA_LC') {
+            $romanized_str = 'ny';
+        } else {
+            $romanized_str = 'gn';
+        }
     } elsif ($consonant =~ /^ດ$/) {
         $romanized_str = 'd';
     } elsif ($consonant =~ /^ບ$/) {
@@ -202,29 +261,41 @@ sub romanize {
     } elsif ($consonant =~ /^ວ$/) {
         $romanized_str = 'v';
     } elsif ($consonant =~ /^ອ$/) {
-        $romanized_str = '-';
-    } elsif (defined (BGN_PCGN->{$consonant})) {
-        $romanized_str = BGN_PCGN->{$consonant};
+        if ($standard eq 'ALA_LC') {
+            $romanized_str = '‘';
+        } else {
+            $romanized_str = '-';
+        }
+    } elsif (defined (ROMAN->{$standard}->{$consonant})) {
+        $romanized_str = ROMAN->{$standard}->{$consonant};
     }
     
     if ($consonant =~ /^ຫ$/ && $syllable =~ /^[ເ-ໄ]?ຫ([ຍຣລຼວ])/) {
         my $sec_consonant = $1;
         $consonant .= $1;
         if ($sec_consonant =~ /ຍ/) {
-            $romanized_str = 'gn';
+            if ($standard eq 'ALA_LC') {
+                $romanized_str = 'ny';
+            } else {
+                $romanized_str = 'gn';
+            }
         } elsif ($sec_consonant =~ /ວ/) {
             $romanized_str = 'v';
-        } elsif (defined (BGN_PCGN->{$sec_consonant})) {
-            $romanized_str = BGN_PCGN->{$sec_consonant};
+        } elsif (defined (ROMAN->{$standard}->{$sec_consonant})) {
+            $romanized_str = ROMAN->{$standard}->{$sec_consonant};
         }
     } elsif ($syllable =~ /^[ເ-ໄ]?$consonant(ວ)./) {
         $consonant .= $1;
-        $romanized_str .= 'o';
+        if ($standard eq 'ALA_LC') {
+            $romanized_str .= 'w'; # I believe this would be the way to romanize accourding to ALA_LC
+        } else {
+            $romanized_str .= 'o';
+        }
     } elsif ($syllable =~ /^[ເ-ໄ]?$consonant([ຣລຼ])/) { # ວ, ຣ, or ລ (also ຼ) can be used in combination with another consonant
         my $sec_consonant = $1;
         $consonant .= $sec_consonant;
-        if (defined (BGN_PCGN->{$sec_consonant})) {
-            $romanized_str .= BGN_PCGN->{$sec_consonant};
+        if (defined (ROMAN->{$standard}->{$sec_consonant})) {
+            $romanized_str .= ROMAN->{$standard}->{$sec_consonant};
         }
     }
     
@@ -243,13 +314,23 @@ sub romanize {
         
     return $romanized_str . 'am' if ($vowel =~ /^(?:ໍາ|ຳ)/);
     
-    if (defined (BGN_PCGN->{$vowel})) {
-        $romanized_str .= BGN_PCGN->{$vowel};
-    } elsif ($vowel =~ /^ົວະ$/ || $vowel =~ /^ັວ$/ || $vowel =~ /^ົວ$/ || $vowel =~ /^ວ$/) {
-        $romanized_str .= 'oua';
-    } elsif ($vowel =~ s/([ອວຽຍ])$// && defined (BGN_PCGN->{$vowel})) {
+    if (defined (ROMAN->{$standard}->{$vowel})) {
+        $romanized_str .= ROMAN->{$standard}->{$vowel};
+    } elsif ($vowel =~ /^ົວະ$/ || $vowel =~ /^ັວ$/) { # references are unclear for ALA_LC
+        if ($standard eq 'ALA_LC') {
+            $romanized_str .= 'ua';
+        } else {
+            $romanized_str .= 'oua';
+        }
+    } elsif ($vowel =~ /^ົວ$/ || $vowel =~ /^ວ$/) { # references are unclear for ALA_LC
+        if ($standard eq 'ALA_LC') {
+            $romanized_str .= 'ūa';
+        } else {
+            $romanized_str .= 'oua';
+        }
+    } elsif ($vowel =~ s/([ອວຽຍ])$// && defined (ROMAN->{$standard}->{$vowel})) {
         $final_consonant = $1;
-        $romanized_str .= BGN_PCGN->{$vowel};
+        $romanized_str .= ROMAN->{$standard}->{$vowel};
     } 
     
     # last character
@@ -262,8 +343,8 @@ sub romanize {
             $romanized_str .= 'p';
         } elsif ($final_consonant =~ /[ຍຽ]/) {
             $romanized_str .= 'y';
-        } elsif (defined (BGN_PCGN->{$final_consonant})) {
-            $romanized_str .= BGN_PCGN->{$final_consonant};
+        } elsif (defined (ROMAN->{$standard}->{$final_consonant})) {
+            $romanized_str .= ROMAN->{$standard}->{$final_consonant};
         }
     }
     

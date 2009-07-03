@@ -4,6 +4,7 @@ use utf8;
 
 use Moose;
 use MooseX::AttributeHelpers;
+use MooseX::Params::Validate;
 
 use Lingua::LO::Romanize::Types;
 use Lingua::LO::Romanize::Word;
@@ -78,7 +79,7 @@ sub _build_syllables {
     \@syllables;
 }
 
-# private sub routine to find a lao syllable from a string and return the syllable
+# private subroutine to find a lao syllable from a string and return the syllable
 sub _find_lao_syllable {
     my $word = shift;
     my $syllable;
@@ -224,12 +225,17 @@ Returns an array reference to all L<Lingua::LO::Romanize::Syllable>
 
 sub romanize {
     my $self = shift;
+    my ( $standard ) = validated_list( \@_,
+                standard => { 
+                    isa         => 'Standard',
+                },
+              );
     
     my @romanized_arr;
     my $romanized_str;
     
     foreach my $syllable ($self->all_syllables) {
-        push @romanized_arr, $syllable->romanize;
+        push @romanized_arr, $syllable->romanize(standard => $standard);
     }
     
     my $join_str = '';

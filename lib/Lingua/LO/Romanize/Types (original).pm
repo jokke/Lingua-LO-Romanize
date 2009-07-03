@@ -1,11 +1,18 @@
 package Lingua::LO::Romanize::Types;
 
-use strict;
 use utf8;
 
-use Moose::Util::TypeConstraints;
+#use Moose::Util::TypeConstraints;
+
+use MooseX::Types -declare => [qw(
+        WordArr
+        SyllableArr
+    )];
+
+use MooseX::Types::Moose qw/Str ArrayRef/;
 
 use Lingua::LO::Romanize::Syllable;
+use Lingua::LO::Romanize::Word;
 
 =encoding utf-8
 
@@ -21,20 +28,21 @@ Version 0.09
 
 our $VERSION = '0.09';
 
-=head2 WordArr
+=head2 Lingua::LO::Romanize::Types::WordArr
 
 An array reference of Word
 
 =cut
 
-subtype 'WordArr'
-      => as 'ArrayRef[Lingua::LO::Romanize::Word]';
+class_type 'Lingua::LO::Romanize::Word';
 
-coerce 'WordArr'
-    => from 'Str'
-    => via {
+subtype WordArr,
+    as ArrayRef[Lingua::LO::Romanize::Word];
+
+coerce WordArr,
+    from Str,
+    via {
         my $text_str = $_;
-        return [] unless $text_str;
         my $words;
         foreach (split /\b/s, $text_str) {
             push @$words, Lingua::LO::Romanize::Word->new(word_str => $_);
@@ -42,18 +50,20 @@ coerce 'WordArr'
         $words;
     };
 
-=head2 SyllableArr
+=head2 Lingua::LO::Romanize::Types::SyllableArr
 
 An array reference of Syllable
 
 =cut
 
-subtype 'SyllableArr'
-      => as 'ArrayRef[Lingua::LO::Romanize::Syllable]';
+class_type 'Lingua::LO::Romanize::Syllable';
 
-coerce 'SyllableArr'
-    => from 'ArrayRef[Str]'
-    => via {
+subtype SyllableArr,
+    as ArrayRef[Lingua::LO::Romanize::Syllable];
+
+coerce SyllableArr,
+    from ArrayRef[Str],
+    via {
         my $arr_ref = $_;
         my $syllables;
         foreach (@$arr_ref) {
@@ -62,14 +72,5 @@ coerce 'SyllableArr'
         $syllables;
     };
 
-enum 'Standard' => qw(BGN_PCGN ALA_LC);
-
-coerce 'Standard'
-    => from 'Str',
-    => via {
-        return 'ALA_LC' if uc($_) eq 'ALA_LC';
-        return 'BGN_PCGN';
-    };
-    
-no Moose::Util::TypeConstraints;
+no MooseX::Types;
 1;
